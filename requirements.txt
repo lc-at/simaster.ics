@@ -1,0 +1,6 @@
+arrow==0.14.7
+html2text==2020.1.16
+ics==0.7
+python-dateutil==2.8.2
+six==1.16.0
+TatSu==5.6.1
