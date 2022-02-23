@@ -29,4 +29,4 @@ def get_icalendar():
         params={"sesi": period},
     ).json()["events"]
 
-    return get_events_ics(events)
+    return get_events_ics(events), {"content-type": "text/calendar"}
