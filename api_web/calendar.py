@@ -13,13 +13,7 @@ def preprocess_time(s: str):
     return arrow.get(s, "YYYY-M-D HH:mm:ss", tzinfo=TIMEZONE)
 
 
-def main(events_fpath: str):
-    try:
-        events = json.load(open(events_fpath))["events"]
-    except Exception as e:  # noqa
-        print(f"error: {e}", file=sys.stderr)
-        sys.exit(-1)
-
+def get_events_ics(events: list) -> str:
     calendar = Calendar()
 
     for event_data in events:
@@ -30,12 +24,4 @@ def main(events_fpath: str):
         e.end = preprocess_time(event_data["end"])
         calendar.events.add(e)
 
-    print(calendar)
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"usage: {sys.argv[0]} <events.json>", file=sys.stderr)
-        sys.exit(-1)
-    main(sys.argv[1])
-
+    return str(calendar)
