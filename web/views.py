@@ -1,14 +1,14 @@
-from flask import Blueprint, abort, request
+from flask import Blueprint, request, render_template
 
 from .simaster import get_simaster_session
 from .calendar import get_events_ics
 
-bp = Blueprint("api", __name__)
+bp = Blueprint("views", __name__)
 
 
-@bp.errorhandler(500)
-def internal_server_error(e):
-    return {"error": "Internal server error"}, 500
+@bp.route("/")
+def homepage():
+    return render_template("index.html")
 
 
 @bp.route("/ics")
