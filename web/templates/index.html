@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-dark.css" type="text/css">
+	<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<header>
+		<h1>simaster.ics</h1>
+		<p>Simple iCalendar provider for SIMASTER</p>
+	</header>
+	<main>
+		<form method="GET" action="/ics" id="form">
+			<label>Period:</label>
+			<input type="text" name="period" placeholder="20222" required>
+			<label>Username:</label>
+			<input type="text" name="username" placeholder="john.doe2003" required>
+			<label>Password:</label>
+			<input type="password" name="password" required>
+			<label>iCalendar URL</label>
+			Subscribe to this URL in your Google Calendar so you can get real-time calendar event updates.<br>
+			<input type="text" readonly id="link">
+			<button type="submit">Download</button>
+		</form>
+	</main>
+
+	<script>
+		$('#form :input').keydown(function() {
+			$('#link').val(window.location + $('#form').serialize());
+		})
+	</script>
+</body>
+
+</html>
