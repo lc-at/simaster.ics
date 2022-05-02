@@ -24,14 +24,17 @@
 			<input type="password" name="password" required>
 			<label>iCalendar URL</label>
 			Subscribe to this URL in your Google Calendar so you can get real-time calendar event updates.<br>
-			<input type="text" readonly id="link">
+			<input type="text" readonly id="link" onclick="this.select();">
 			<button type="submit">Download</button>
 		</form>
 	</main>
 
 	<script>
+		const apiUrl = "{{ url_for('views.get_icalendar') }}";
 		$('#form :input').keydown(function() {
-			$('#link').val(window.location + $('#form').serialize());
+			const serialized = $('#form').serialize();
+			const url = `${apiUrl}?${serialized}`;
+			$('#link').val(new URL(url, document.baseURI).href);
 		})
 	</script>
 </body>
