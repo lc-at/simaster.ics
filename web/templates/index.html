@@ -2,41 +2,46 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title></title>
-	<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-dark.css" type="text/css">
-	<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title></title>
+        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-dark.css" type="text/css">
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-	<header>
-		<h1>simaster.ics</h1>
-		<p>Simple iCalendar provider for SIMASTER</p>
-	</header>
-	<main>
-		<form method="GET" action="/ics" id="form">
-			<label>Period:</label>
-			<input type="text" name="period" placeholder="20222" required>
-			<label>Username:</label>
-			<input type="text" name="username" placeholder="john.doe2003" required>
-			<label>Password:</label>
-			<input type="password" name="password" required>
-			<label>iCalendar URL</label>
-			Subscribe to this URL in your Google Calendar so you can get real-time calendar event updates.<br>
-			<input type="text" readonly id="link" onclick="this.select();">
-			<button type="submit">Download</button>
-		</form>
-	</main>
+        <header>
+                <h1>simaster.ics</h1>
+                <p>Simple iCalendar provider for SIMASTER</p>
+        </header>
+        <main>
+                <form method="GET" action="/ics" id="form">
+                        <label>Type:</label>
+                        <select name="type" required>
+                                <option value="class" selected>Class</option>
+                                <option value="exam">Exam</option>
+                        </select> 
+                        <label>Period:</label>
+                        <input type="text" name="period" placeholder="20222" required>
+                        <label>Username:</label>
+                        <input type="text" name="username" placeholder="john.doe2003" required>
+                        <label>Password:</label>
+                        <input type="password" name="password" required>
+                        <label>iCalendar URL</label>
+                        Subscribe to this URL in your Google Calendar so you can get real-time calendar event updates.<br>
+                        <input type="text" readonly id="link" onclick="this.select();">
+                        <button type="submit">Download</button>
+                </form>
+        </main>
 
-	<script>
-		const apiUrl = "{{ url_for('views.get_icalendar') }}";
-		$('#form :input').keyup(function() {
-			const serialized = $('#form').serialize();
-			const url = `${apiUrl}?${serialized}`;
-			$('#link').val(new URL(url, document.baseURI).href);
-		})
-	</script>
+        <script>
+                const apiUrl = "{{ url_for('views.get_icalendar') }}";
+                $('#form :input').keyup(function() {
+                        const serialized = $('#form').serialize();
+                        const url = `${apiUrl}?${serialized}`;
+                        $('#link').val(new URL(url, document.baseURI).href);
+                })
+        </script>
 </body>
 
 </html>

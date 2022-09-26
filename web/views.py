@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 
-from .simaster import get_simaster_session
-from .calendar import get_events_ics
+from .simaster import get_simaster_session, get_class_evdata, get_exam_evdata
+from .evdata_processor import process_class_evdata, process_exam_evdata
 
 bp = Blueprint("views", __name__)
 
@@ -16,17 +16,24 @@ def get_icalendar():
     username = request.args.get("username")
     password = request.args.get("password")
     period = request.args.get("period")
+    type_ = request.args.get("type")
 
     if not (username and password and period):
         return {"error": "Missing fields"}, 400
+    elif not type_:
+        type_ = "class"
 
     ses = get_simaster_session(username, password)
     if not ses:
         return {"error": "Invalid username or password"}, 401
 
-    events = ses.get(
-        "https://simaster.ugm.ac.id/akademik/mhs_jadwal_kuliah/content_harian",
-        params={"sesi": period},
-    ).json()["events"]
+    if type_ == "class":
+        evdata = get_class_evdata(ses, period)
+        ics_str = process_class_evdata(evdata)
+    elif type_ == "exam":
+        evdata = get_exam_evdata(ses, period)
+        ics_str = process_exam_evdata(evdata)
+    else:
+        return {"error": "Invalid type"}, 401
 
-    return get_events_ics(events), {"content-type": "text/calendar"}
+    return ics_str, {"content-type": "text/calendar"}
