@@ -20,7 +20,7 @@
                         <select name="type" required>
                                 <option value="class" selected>Class</option>
                                 <option value="exam">Exam</option>
-                        </select> 
+                        </select>
                         <label>Period:</label>
                         <input type="text" name="period" placeholder="20222" required>
                         <label>Username:</label>
@@ -36,11 +36,13 @@
 
         <script>
                 const apiUrl = "{{ url_for('views.get_icalendar') }}";
-                $('#form :input').keyup(function() {
+                const updateIcsUrl = function() {
                         const serialized = $('#form').serialize();
                         const url = `${apiUrl}?${serialized}`;
                         $('#link').val(new URL(url, document.baseURI).href);
-                })
+                }
+                $('#form :input').keyup(updateIcsUrl);
+                $('#form').change(updateIcsUrl);
         </script>
 </body>
 
