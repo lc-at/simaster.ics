@@ -34,7 +34,10 @@ Before deploying, make sure that you have already installed the requirements
 
 -   Gunicorn: `gunicorn wsgi:app`
 -   Flask Development Server: `python wsgi.py`
--   Heroku: use the provided (or your own) Procfile
+-   Heroku: use the provided (or your own) `Procfile`
+-   Docker: use the `Dockerfile`
+    -   `docker build . -t simasterics`
+    -   `docker run -p 8000:8000 simasterics`
 
 ## License
 
