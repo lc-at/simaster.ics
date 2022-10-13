@@ -2,15 +2,27 @@ import re
 import random
 import string
 
+import cachelib
 import requests
 from lxml.html.soupparser import fromstring
 
 BASE_URL = "https://simaster.ugm.ac.id"
+HOME_URL = f"{BASE_URL}/beranda"
 LOGIN_URL = f"{BASE_URL}/services/simaster/service_login"
 HEADERS = {"UGMFWSERVICE": "1", "User-Agent": "SimasterICS/1.0.0"}
 
+cache = cachelib.SimpleCache()
 
-def get_simaster_session(username, password):
+
+def get_simaster_session(username, password, reuse_session=False):
+    # get session from cache, then return it if valid
+    ses = cache.get(username)
+    if ses and reuse_session:
+        req = ses.get(HOME_URL)
+        if 'simasterUGM_token' in req.text:
+            return ses
+
+    # create new session
     ses = requests.Session()
     req = ses.post(
         LOGIN_URL,
@@ -23,6 +35,9 @@ def get_simaster_session(username, password):
     )
     if req.status_code != 200:
         return None
+
+    # update cache
+    cache.set(username, ses)
     return ses
 
 

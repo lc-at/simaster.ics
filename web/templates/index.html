@@ -27,6 +27,12 @@
                         <input type="text" name="username" placeholder="john.doe2003" required>
                         <label>Password:</label>
                         <input type="password" name="password" required>
+                        <label>Reuse session:</label>
+                        <small>This will cache your session token in the server.</small><br>
+                        <select name="reuse_session" required>
+                                <option value="1" selected>Yes</option>
+                                <option value="0">No</option>
+                        </select>
                         <label>iCalendar URL</label>
                         Subscribe to this URL in your Google Calendar so you can get real-time calendar event updates.<br>
                         <input type="text" readonly id="link" onclick="this.select();">
