@@ -23,7 +23,9 @@ make an iCalendar file.
     -   `username`: your SIMASTER account username
     -   `password`: your SIMASTER account password
     -   `period`: calendar period (e.g. `20212`, `20211`)
-    -   `type`: optional, calendar event type (can be either `exam` or `class`)
+    -   `type`: optional, calendar event type (possible values: `exam`, `class`)
+    -   `reuse_session`: optional, cache and reuse session (possible values:
+        `0`, `1`)
 
 ## Deployment
 
