@@ -17,13 +17,19 @@ def get_icalendar():
     password = request.args.get("password")
     period = request.args.get("period")
     type_ = request.args.get("type")
+    reuse_session = request.args.get("reuse_session")
 
     if not (username and password and period):
         return {"error": "Missing fields"}, 400
     elif not type_:
         type_ = "class"
 
-    ses = get_simaster_session(username, password)
+    if reuse_session.isdigit():
+        reuse_session = bool(int(reuse_session))
+    else:
+        reuse_session = False
+
+    ses = get_simaster_session(username, password, reuse_session)
     if not ses:
         return {"error": "Invalid username or password"}, 401
 
