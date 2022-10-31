@@ -24,7 +24,7 @@ def get_icalendar():
     elif not type_:
         type_ = "class"
 
-    if reuse_session.isdigit():
+    if reuse_session and reuse_session.isdigit():
         reuse_session = bool(int(reuse_session))
     else:
         reuse_session = False
