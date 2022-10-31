@@ -5,7 +5,7 @@ schedule.
 
 ## Quick Usage
 
-1.  Open the [demo](https://simaster-ics.herokuapp.com) or your server URL if
+1.  Open the [demo](https://simaster-ics.onrender.com) or your server URL if
     you self-hosted it.
 2.  Fill in all the fields
 3.  Copy the iCalendar URL
@@ -14,7 +14,7 @@ schedule.
 ## API
 
 Once you have deployed simaster.ics (or, just use the
-[demo](https://simaster-ics.herokuapp.com), you can directly utilize its API to
+[demo](https://simaster-ics.onrender.com), you can directly utilize its API to
 make an iCalendar file.
 
 -   Method: `GET`
