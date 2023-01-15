@@ -27,7 +27,7 @@ def get_simaster_session(username, password, reuse_session=False):
     req = ses.post(
         LOGIN_URL,
         data={
-            "aId": "".join(random.choice(string.hexdigits) for _ in range(16)).lower(),
+            "aId": "",
             "username": username,
             "password": password,
         },
