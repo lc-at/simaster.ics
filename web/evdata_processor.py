@@ -3,17 +3,25 @@ from textwrap import dedent
 import arrow
 from html2text import html2text
 from ics import Calendar, Event
+from ics.parse import ContentLine
 
 
 TIMEZONE = "Asia/Jakarta"
 LOCALE = "id_ID"
 
 
+class NamedCalendar(Calendar):
+    def __init__(self, calendar_name: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.extra.append(ContentLine(
+            name="X-WR-CALNAME", value=calendar_name))
+
+
 def process_class_evdata(events: list) -> str:
     def preprocess_time(s: str):
         return arrow.get(s, "YYYY-M-D HH:mm:ss", tzinfo=TIMEZONE)
 
-    calendar = Calendar()
+    calendar = NamedCalendar("SIMASTER Classes")
 
     for event_data in events:
         e = Event()
@@ -35,7 +43,7 @@ def process_exam_evdata(exam_tables: list) -> str:
             return None
         return s
 
-    calendar = Calendar()
+    calendar = NamedCalendar("SIMASTER Exams")
 
     for exam_type, exam_table in zip(("UTS", "UAS"), exam_tables):
         for row in exam_table:
