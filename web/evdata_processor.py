@@ -17,11 +17,11 @@ class NamedCalendar(Calendar):
             name="X-WR-CALNAME", value=calendar_name))
 
 
-def process_class_evdata(events: list) -> str:
+def process_class_evdata(events: list, calendar_name: str) -> str:
     def preprocess_time(s: str):
         return arrow.get(s, "YYYY-M-D HH:mm:ss", tzinfo=TIMEZONE)
 
-    calendar = NamedCalendar("SIMASTER Classes")
+    calendar = NamedCalendar(calendar_name)
 
     for event_data in events:
         e = Event()
@@ -34,7 +34,7 @@ def process_class_evdata(events: list) -> str:
     return str(calendar)
 
 
-def process_exam_evdata(exam_tables: list) -> str:
+def process_exam_evdata(exam_tables: list, calendar_name: str) -> str:
     def preprocess_str(s: str):
         if not isinstance(s, str) and not s:
             return None
