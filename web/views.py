@@ -33,12 +33,16 @@ def get_icalendar():
     if not ses:
         return {"error": "Invalid username or password"}, 401
 
+    title_suffix = f"({username} / {period})"
+
     if type_ == "class":
         evdata = get_class_evdata(ses, period)
-        ics_str = process_class_evdata(evdata)
+        ics_str = process_class_evdata(
+            evdata, f"SIMASTER Classes {title_suffix}")
     elif type_ == "exam":
         evdata = get_exam_evdata(ses, period)
-        ics_str = process_exam_evdata(evdata)
+        ics_str = process_exam_evdata(
+            evdata, f"SIMASTER Exams {title_suffix}")
     else:
         return {"error": "Invalid type"}, 401
 
