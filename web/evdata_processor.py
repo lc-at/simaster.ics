@@ -43,7 +43,7 @@ def process_exam_evdata(exam_tables: list, calendar_name: str) -> str:
             return None
         return s
 
-    calendar = NamedCalendar("SIMASTER Exams")
+    calendar = NamedCalendar(calendar_name)
 
     for exam_type, exam_table in zip(("UTS", "UAS"), exam_tables):
         for row in exam_table:
