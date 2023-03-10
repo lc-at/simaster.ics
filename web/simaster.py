@@ -1,3 +1,4 @@
+import hashlib
 import re
 import random
 import string
@@ -13,10 +14,14 @@ HEADERS = {"UGMFWSERVICE": "1", "User-Agent": "SimasterICS/1.0.0"}
 
 cache = cachelib.SimpleCache()
 
+def get_cache_key(username, password):
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    return f'{username}:{password_hash}'
 
 def get_simaster_session(username, password, reuse_session=False):
     # get session from cache, then return it if valid
-    ses = cache.get(username)
+    key = get_cache_key(username, password)
+    ses = cache.get(key)
     if ses and reuse_session:
         req = ses.get(HOME_URL)
         if 'simasterUGM_token' in req.text:
@@ -37,7 +42,7 @@ def get_simaster_session(username, password, reuse_session=False):
         return None
 
     # update cache
-    cache.set(username, ses)
+    cache.set(key, ses)
     return ses
 
 
