@@ -84,6 +84,7 @@
         }
 
         $('#form :input').keyup(updateIcsUrl);
+        $('select').change(updateIcsUrl);
         $('#form').change(updateIcsUrl);
 
         // fetch public key, then show appropriate input group if public key available
