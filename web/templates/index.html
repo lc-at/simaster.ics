@@ -2,54 +2,114 @@
 <html lang="en">
 
 <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title></title>
-        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-dark.css" type="text/css">
-        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>simaster.ics</title>
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-dark.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-        <header>
-                <h1>simaster.ics</h1>
-                <p>Simple iCalendar provider for SIMASTER</p>
-        </header>
-        <main>
-                <form method="GET" action="/ics" id="form">
-                        <label>Type:</label>
-                        <select name="type" required>
-                                <option value="class" selected>Class</option>
-                                <option value="exam">Exam</option>
-                        </select>
-                        <label>Period:</label>
-                        <input type="text" name="period" placeholder="20222" required>
-                        <label>Username:</label>
-                        <input type="text" name="username" placeholder="john.doe2003" required>
-                        <label>Password:</label>
-                        <input type="password" name="password" required>
-                        <label>Reuse session:</label>
-                        <small>This will cache your session token in the server.</small><br>
-                        <select name="reuse_session" required>
-                                <option value="1" selected>Yes</option>
-                                <option value="0">No</option>
-                        </select>
-                        <label>iCalendar URL</label>
-                        Subscribe to this URL in your Google Calendar so you can get real-time calendar event updates.<br>
-                        <input type="text" readonly id="link" onclick="this.select();">
-                        <button type="submit">Download</button>
-                </form>
-        </main>
+    <header>
+        <h1>simaster.ics</h1>
+        <p>Simple iCalendar provider for SIMASTER</p>
+    </header>
+    <main>
+        <form method="GET" action="/ics" id="form">
+            <label>Type:</label>
+            <select name="type" required>
+                <option value="class" selected>Class</option>
+                <option value="exam">Exam</option>
+            </select>
 
-        <script>
-                const apiUrl = "{{ url_for('views.get_icalendar') }}";
-                const updateIcsUrl = function() {
-                        const serialized = $('#form').serialize();
-                        const url = `${apiUrl}?${serialized}`;
-                        $('#link').val(new URL(url, document.baseURI).href);
+            <label>Period:</label>
+            <small><code>20222</code> means "2022/2023 Genap"</small><br>
+            <input type="text" name="period" placeholder="20222" required>
+
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="john.doe2003" required>
+
+            <label>Password:</label>
+            <input type="password" id="plainPassword" required>
+            <input type="hidden" name="password" id="processedPassword" required>
+
+            <label>Reuse session:</label>
+            <small>This will cache your session token in the server.</small><br>
+            <select name="reuse_session" required>
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+
+            <div id="enableEncInputGroup" style="display: none">
+                <label>Encrypt password:</label>
+                <small>This will encrypt your password using the server's <a
+                        href="{{ url_for('views.get_public_key') }}">public key</a>.</small><br>
+                <select name="encrypt_password" id="enableEncOption" required>
+                    <option value="1">Yes (recommended)</option>
+                    <option value="0" selected>No</option>
+                </select>
+            </div>
+
+            <hr>
+            <h5>iCalendar URL</h5>
+            Subscribe to this URL in your Google Calendar so you can get real-time calendar event
+            updates.<br>
+            <textarea readonly id="link" onclick="this.select();"></textarea>
+
+
+            <button type="submit">Download</button>
+        </form>
+
+        <textarea style="display: none" id="publicKey"></textarea>
+    </main>
+
+    <script>
+        const apiUrl = "{{ url_for('views.get_icalendar') }}";
+        const updateIcsUrl = function () {
+            const serializedForm = $('#form').serialize();
+            const url = `${apiUrl}?${serializedForm}`;
+            const enableEncryption = $('#enableEncOption').val() === '1';
+            if (!enableEncryption) {
+                $('#processedPassword').val($('#plainPassword').val());
+            } else {
+                var enc = new JSEncrypt();
+                enc.setPublicKey($('#publicKey').val());
+                console.log($('#publicKey').val());
+                console.log(enc.encrypt("hello"));
+                const encryptedPassword = enc.encrypt($('#plainPassword').val());
+                $('#processedPassword').val(encryptedPassword);
+            }
+            $('#link').val(new URL(url, document.baseURI).href);
+        }
+
+        $('#form :input').keyup(updateIcsUrl);
+        $('select').change(updateIcsUrl);
+        $('#form').change(updateIcsUrl);
+
+        // fetch public key, then show appropriate input group if public key available
+        $(document).ready(() => {
+            $.get("{{ url_for('views.get_public_key') }}").then(
+                (data) => {
+                    $('#publicKey').val(data);
+                    $('#enableEncInputGroup').show();
+                    $('#enableEncOption').val('1');
                 }
-                $('#form :input').keyup(updateIcsUrl);
-                $('#form').change(updateIcsUrl);
-        </script>
+            )
+        });
+    </script>
+
+    {% if config['ENABLE_PWD_ENC'] %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js"
+        integrity="sha512-zDvrqenA0eFJZCxBsryzUZcvihvNlEXbteMv62yRxdhR4s7K1aaz+LjsRyfk6M+YJLyAJEuuquIAI8I8GgLC8A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% endif %}
+
+    <hr>
+    <small>
+        This project is open-source.
+        Contribute on <a href="https://github.com/p4kl0nc4t/simaster.ics">GitHub</a>.
+    </small>
 </body>
 
 </html>

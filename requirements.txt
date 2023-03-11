@@ -2,8 +2,11 @@ arrow==0.14.7
 beautifulsoup4==4.11.1
 cachelib==0.9.0
 certifi==2021.10.8
+cffi==1.15.1
 charset-normalizer==2.0.12
 click==8.0.4
+cryptography==39.0.2
+cryptograpy==0.0.0
 Flask==2.0.3
 gunicorn==20.1.0
 html2text==2020.1.16
@@ -13,7 +16,9 @@ itsdangerous==2.1.0
 Jinja2==3.0.3
 lxml==4.9.1
 MarkupSafe==2.1.0
+pycparser==2.21
 python-dateutil==2.8.2
+python-dotenv==1.0.0
 requests==2.27.1
 six==1.16.0
 soupsieve==2.3.2.post1
