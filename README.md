@@ -1,5 +1,11 @@
 # `simaster.ics`
 
+> [!WARNING]
+> This project does not work anymore due to changes in SIMASTER APIs.
+> I am no longer a student so I will not be maintaining this anymore.
+> Feel free to make a fork and update it yourself. Contact me if you
+> need any help.
+
 Simple Python-based web app to generate an iCalendar file from SIMASTER
 courses schedule.
 
